@@ -9,7 +9,7 @@ from pydub import AudioSegment
 # variables globales
 # ------------------
 props_dict={} 
-DEBUG_MODE=True
+DEBUG_MODE=False
 
 def init(props):
     global props_dict
