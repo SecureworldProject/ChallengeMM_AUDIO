@@ -2,7 +2,7 @@
 "FileName": "challenge_loader_python.dll",
 "Description": "challenge que calcula la frecuencia fundamental de un audio",
 "Props": {
-  "module_python": "audio",
+  "module_python": "challegenMM_audio",
   "validity_time": 3600,
   "refresh_time": 1000,
 },
