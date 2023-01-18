@@ -2,14 +2,15 @@ import librosa
 import numpy as np
 import os
 from pathlib import Path
-import easygui
+#import easygui
+from tkinter import messagebox
 import lock
 from pydub import AudioSegment
 
 # variables globales
 # ------------------
 props_dict={} 
-DEBUG_MODE=False
+DEBUG_MODE=True
 
 def init(props):
     global props_dict
@@ -34,14 +35,27 @@ def executeChallenge():
     # pregunta si el usuario tiene movil con capacidad para grabar audio
     # -----------------------------------------------------
     #textos en español, aunque podrian ser parametros adicionales del challenge
-    conexion=easygui.ynbox(msg='¿Tienes un movil con bluetooth activo y \
-emparejado con tu PC con capacidad para grabar un audio?', choices=("Yes","Not"))
-    print (conexion)
+    #conexion=easygui.ynbox('¿Tienes un movil con bluetooth activo y cámara emparejado con tu PC?',"challenge MM: RGB", choices=("Yes","Not"))
+    conexion=messagebox.askyesno('challenge MM: RGB','¿Tienes un movil con bluetooth activo y emparejado con tu PC con capacidad para grabar un audio?')
+    print(conexion)
+    #Si el usuario responde que no ha emparejado móvil y PC, devolvemos clave y longitud 0
+    if (conexion==False):
+        lock.lockOUT("AUDIO")
+        print ("return key zero and long zero")
+        key=0
+        key_size=0
+        result =(key,key_size)
+        print ("result:",result)
+        return result # clave cero, longitud cero
+  
+    #popup msgbox pidiendo interaccion
+    #---------------------------------
+    #sent=easygui.ynbox(props_dict["interactionText"], "challenge MM: RGB", choices=("Yes","Not"))
+    sent=conexion=messagebox.askyesno('challenge MM: RGB',props_dict['interactionText'])
+    print(sent)
 
-    sent=easygui.ynbox(msg='¿Has enviado el audio desde el móvil a tu PC?', choices=("Yes","Not"))
-    print (sent)
-
-    if (conexion==False | sent== False):
+    #Si el usuario responde que no ha enviado la imagen, devolvemos clave y longitud 0
+    if (sent== False):
         lock.lockOUT("AUDIO")
         print ("return key zero and long zero")
         key=0
@@ -139,6 +153,6 @@ emparejado con tu PC con capacidad para grabar un audio?', choices=("Yes","Not")
 
     
 if __name__ == "__main__":
-    midict={"interactionText": "", "param2":3}
+    midict={"interactionText": '¿Has enviado el audio desde el móvil a tu PC?', "param2":3}
     init(midict)
     executeChallenge()
