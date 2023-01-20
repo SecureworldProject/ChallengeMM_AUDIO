@@ -36,7 +36,7 @@ def executeChallenge():
     # -----------------------------------------------------
     #textos en español, aunque podrian ser parametros adicionales del challenge
     #conexion=easygui.ynbox('¿Tienes un movil con bluetooth activo y cámara emparejado con tu PC?',"challenge MM: RGB", choices=("Yes","Not"))
-    conexion=messagebox.askyesno('challenge MM: RGB','¿Tienes un movil con bluetooth activo y emparejado con tu PC con capacidad para grabar un audio?')
+    conexion=messagebox.askyesno('challenge MM: RGB','¿Tienes un movil con bluetooth activo y emparejado a tu PC con capacidad para grabar un audio?')
     print(conexion)
     #Si el usuario responde que no ha emparejado móvil y PC, devolvemos clave y longitud 0
     if (conexion==False):

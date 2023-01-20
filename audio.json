@@ -6,5 +6,5 @@
   "validity_time": 3600,
   "refresh_time": 1000,
 },
-"Requirements": "none" 
+"Requirements": "recorder" 
 }
