@@ -5,6 +5,7 @@
   "module_python": "challegenMM_audio",
   "validity_time": 3600,
   "refresh_time": 1000,
+  "interactionText": "¿Has enviado el audio desde el móvil a tu PC?",
 },
 "Requirements": "recorder" 
 }

@@ -10,7 +10,7 @@ from pydub import AudioSegment
 # variables globales
 # ------------------
 props_dict={} 
-DEBUG_MODE=True
+DEBUG_MODE=False
 
 def init(props):
     global props_dict
@@ -35,8 +35,8 @@ def executeChallenge():
     # pregunta si el usuario tiene movil con capacidad para grabar audio
     # -----------------------------------------------------
     #textos en español, aunque podrian ser parametros adicionales del challenge
-    #conexion=easygui.ynbox('¿Tienes un movil con bluetooth activo y cámara emparejado con tu PC?',"challenge MM: RGB", choices=("Yes","Not"))
-    conexion=messagebox.askyesno('challenge MM: RGB','¿Tienes un movil con bluetooth activo y emparejado a tu PC con capacidad para grabar un audio?')
+    #conexion=easygui.ynbox('¿Tienes un movil con bluetooth activo y cámara emparejado con tu PC?',"challenge MM: AUDIO", choices=("Yes","Not"))
+    conexion=messagebox.askyesno('challenge MM: AUDIO','¿Tienes un movil con bluetooth activo y emparejado a tu PC con capacidad para grabar un audio?')
     print(conexion)
     #Si el usuario responde que no ha emparejado móvil y PC, devolvemos clave y longitud 0
     if (conexion==False):
@@ -50,8 +50,8 @@ def executeChallenge():
   
     #popup msgbox pidiendo interaccion
     #---------------------------------
-    #sent=easygui.ynbox(props_dict["interactionText"], "challenge MM: RGB", choices=("Yes","Not"))
-    sent=conexion=messagebox.askyesno('challenge MM: RGB',props_dict['interactionText'])
+    #sent=easygui.ynbox(props_dict["interactionText"], "challenge MM: AUDIO", choices=("Yes","Not"))
+    sent=conexion=messagebox.askyesno('challenge MM: AUDIO',props_dict['interactionText'])
     print(sent)
 
     #Si el usuario responde que no ha enviado la imagen, devolvemos clave y longitud 0
