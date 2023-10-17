@@ -46,13 +46,15 @@ def calculateF0(filename):
     print("Frecuencia fundamental:", frecuencia_fundamental, "Hz")
     return frecuencia_fundamental
 
-def returnKey(key):
-    if (key == 0):
-        result =(0, 0)
+def returnKey(frequency):
+    if (frequency == 0):
+        key = frequency
+        key_size = 0
     else:
-        key=round(key)
-        key_size=len(str(key))
-        result =(key, key_size)
+        cad="%d"%(frequency)
+        key = bytes(cad,'utf-8')
+        key_size = len(key)
+    result = (key, key_size)
     print ("result:",result)
     return result
 
@@ -70,10 +72,9 @@ def fundamentalFrequency(filename, filename_mp3, filename_m4a, filename_aac, con
         sound.export(converted_audio, format="wav")
         
         f0 = calculateF0(converted_audio)
+        lock.lockOUT("AUDIO")
         return f0
         
-        #mecanismo de lock END
-        lock.lockOUT("AUDIO")
 
     elif os.path.exists(filename_m4a):
         print ("Fichero de captura",filename_m4a," encontrado")
@@ -81,10 +82,8 @@ def fundamentalFrequency(filename, filename_mp3, filename_m4a, filename_aac, con
         sound.export(converted_audio, format="wav")
         
         f0 = calculateF0(converted_audio)
-        return f0
-
-        #mecanismo de lock END
         lock.lockOUT("AUDIO")
+        return f0
 
     elif os.path.exists(filename_aac):
         print ("Fichero de captura",filename_aac," encontrado")
@@ -92,10 +91,8 @@ def fundamentalFrequency(filename, filename_mp3, filename_m4a, filename_aac, con
         sound.export(converted_audio, format="wav")
 
         f0 = calculateF0(converted_audio)
-        return f0
-        
-        #mecanismo de lock END
         lock.lockOUT("AUDIO")
+        return f0
         
     else:
         print ("ERROR: el fichero de captura",filename," no existe")
@@ -175,7 +172,7 @@ def executeChallenge():
                     os.remove(converted_audio)
         
     # construccion de la respuesta
-    returnKey(f0)
+    return returnKey(f0)
 
     
 if __name__ == "__main__":

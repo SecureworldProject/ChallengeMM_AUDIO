@@ -11,7 +11,7 @@ import soundfile as sf
 # variables globales
 
 props_dict={} 
-DEBUG_MODE=True
+DEBUG_MODE=False
 SAMPLING_RATE = 44100
 
 def init(props):
@@ -63,25 +63,25 @@ def mix(captured_audio):
 
     return mixed_audio
 
-def returnKey(key):
-    if (key == 0):
-        result =(0, 0)
+def returnKey(frequency):
+    if (frequency == 0):
+        key = frequency
+        key_size = 0
     else:
-        key=round(key)
-        key_size=len(str(key))
-        result =(key, key_size)
+        cad="%d"%(frequency)
+        key = bytes(cad,'utf-8')
+        key_size = len(key)
+    result = (key, key_size)
     print ("result:",result)
-    return result 
+    return result
 
 def fundamentalFrequency(filename, filename_mp3, filename_m4a, filename_aac, converted_audio):
     if os.path.exists(filename):
         audio = mix(filename)
         f0 = calculateF0(audio)
+        lock.lockOUT("AUDIO")
         return f0
     
-        #mecanismo de lock END
-        lock.lockOUT("AUDIO")
-
     elif os.path.exists(filename_mp3):
         print ("Fichero de captura",filename_mp3," encontrado")
         sound = AudioSegment.from_file(filename_mp3)
@@ -89,10 +89,8 @@ def fundamentalFrequency(filename, filename_mp3, filename_m4a, filename_aac, con
         
         audio = mix(converted_audio)
         f0 = calculateF0(audio)
-        return f0
-        
-        #mecanismo de lock END
         lock.lockOUT("AUDIO")
+        return f0
 
     elif os.path.exists(filename_m4a):
         print ("Fichero de captura",filename_m4a," encontrado")
@@ -101,11 +99,9 @@ def fundamentalFrequency(filename, filename_mp3, filename_m4a, filename_aac, con
         
         audio = mix(converted_audio)
         f0 = calculateF0(audio)
-        return f0
-
-        #mecanismo de lock END
         lock.lockOUT("AUDIO")
-
+        return f0
+    
     elif os.path.exists(filename_aac):
         print ("Fichero de captura",filename_aac," encontrado")
         sound = AudioSegment.from_file(filename_aac)
@@ -115,13 +111,12 @@ def fundamentalFrequency(filename, filename_mp3, filename_m4a, filename_aac, con
         f0 = calculateF0(audio)
         return f0
         
-        #mecanismo de lock END
-        lock.lockOUT("AUDIO")
-        
     else:
         print ("ERROR: el fichero de captura",filename," no existe")
-        lock.lockOUT("AUDIO")
         return 0
+    
+        #mecanismo de lock END
+        lock.lockOUT("AUDIO")
     
 def executeChallenge():
     print("Starting execute")
@@ -136,13 +131,6 @@ def executeChallenge():
     # se supone que el usuario ha depositado un .wav usando bluetooth
     # el nombre del audio puede ser siempre el mismo, fijado por el proxy bluetooth.
     # aqui vamos a "forzar" el nombre del fichero para pruebas
-      
-    """filename=folder+"\\"+"capture.wav"
-    filename_mp3=folder+"\\"+"capture.mp3"
-    filename_m4a=folder+"\\"+"capture.m4a"
-    filename_aac=folder+"\\"+"capture.aac"
-    converted_audio=folder+"\\"+"converted_audio.wav"
-    """
 
     filename = os.path.join(folder, "capture.wav")
     filename_mp3 = os.path.join(folder, "capture.mp3")
@@ -162,7 +150,6 @@ def executeChallenge():
     else:
         # pregunta si el usuario tiene movil con capacidad para grabar audio
         conexion=messagebox.askyesno('challenge MM: AUDIO','¿Tienes un movil con bluetooth activo y emparejado a tu PC con capacidad para grabar un audio?')
-        print(conexion)
         
         #Si el usuario responde que no ha emparejado móvil y PC, devolvemos clave y longitud 0
         if (conexion==False):
@@ -173,8 +160,7 @@ def executeChallenge():
         else:      
             # popup msgbox pidiendo interaccion
             sent=conexion=messagebox.askyesno('challenge MM: AUDIO',props_dict['interactionText'])
-            print(sent)
-
+            
             #Si el usuario responde que no ha enviado la imagen, devolvemos clave y longitud 0
             if (sent== False):
                 print ("ERROR: la imagen no se ha enviado")
@@ -183,7 +169,7 @@ def executeChallenge():
 
             else:
                 f0 = fundamentalFrequency(filename, filename_mp3, filename_m4a, filename_aac, converted_audio)
-            
+
                 if os.path.exists(filename):    
                     os.remove(filename)
                 if os.path.exists(filename_mp3):    
@@ -194,9 +180,9 @@ def executeChallenge():
                     os.remove(filename_aac)
                 if os.path.exists(converted_audio):    
                     os.remove(converted_audio)
-        
+
     # construccion de la respuesta
-    returnKey(f0)
+    return returnKey(f0)
 
     
 if __name__ == "__main__":
