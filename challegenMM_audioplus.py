@@ -11,6 +11,7 @@ import soundfile as sf
 props_dict = {}
 DEBUG_MODE = False
 SAMPLING_RATE = 44100
+interval = 50
 
 
 def init(props):
@@ -80,11 +81,12 @@ def mix(captured_audio):
     return mixed_audio
 
 
-def returnKey(frequency):
+def returnKey(frequency, interval):
     if (frequency == 0):
         key = frequency
         key_size = 0
     else:
+        frequency = (frequency - 16000) // interval + 1
         cad = "%d" % (frequency)
         key = bytes(cad, 'utf-8')
         key_size = len(key)
@@ -200,7 +202,7 @@ def executeChallenge():
                     os.remove(converted_audio)
 
     # construccion de la respuesta
-    return returnKey(f0)
+    return returnKey(f0, interval)
 
 
 if __name__ == "__main__":
